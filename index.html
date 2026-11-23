@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Big Monster Hamburgueria</title>
+<meta name="description" content="Big Monster — hamburgueria artesanal em Valença do Piauí. Aberto todos os dias, 17:30 às 00:30.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Archivo:wght@400;500;700;800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: palco 3D fixo atrás; o hambúrguer se desmonta enquanto a página rola, depois o conteúdo cobre o palco */
+:root{
+  --char:#131010;        /* tábua queimada */
+  --char-2:#1d1817;
+  --line:#3a302c;
+  --cream:#f5ede2;       /* papel manteiga */
+  --muted:#b9aa9a;
+  --cheddar:#f4a531;     /* cheddar derretido */
+  --crust:#b5652b;       /* casca do brioche */
+  --display:"Bowlby One","Arial Black",Impact,sans-serif;
+  --body:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth;overflow-x:clip}
+.hero{overflow-x:clip}
+body{margin:0;background:var(--char);color:var(--cream);font:400 16px/1.6 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--cheddar);outline-offset:3px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+
+/* ---------- nav ---------- */
+header{position:fixed;top:0;left:0;right:0;z-index:20;padding-top:env(safe-area-inset-top,0px);
+  background:linear-gradient(var(--char),rgba(19,16,16,0))}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:16px}
+.brand{display:flex;align-items:center;gap:10px;font:400 18px/1 var(--display);letter-spacing:.02em;text-decoration:none}
+.brand svg{width:34px;height:34px}
+.nav ul{display:flex;gap:26px;list-style:none;margin:0;padding:0;font-weight:500;font-size:14px}
+.nav ul a{text-decoration:none;color:var(--muted)}
+.nav ul a:hover{color:var(--cream)}
+.btn{display:inline-flex;align-items:center;gap:10px;background:var(--cheddar);color:#1b120a;font-weight:800;font-size:15px;
+  padding:13px 22px;border-radius:999px;text-decoration:none;border:0;cursor:pointer;transition:transform .15s,background .15s}
+.btn:hover{transform:translateY(-2px);background:#ffb848}
+.btn.ghost{background:transparent;color:var(--cream);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--cheddar);background:transparent}
+.btn.sm{padding:9px 16px;font-size:13px}
+@media (max-width:760px){.nav ul{display:none}}
+section[id]{scroll-margin-top:80px}
+
+main{position:relative;z-index:1}
+
+/* ---------- hero ---------- */
+.hero{min-height:100svh;display:flex;align-items:center;padding-block:110px 60px}
+.hero .copy{max-width:560px}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cheddar);display:flex;gap:10px;align-items:center}
+.eyebrow .dot{width:8px;height:8px;border-radius:50%;background:#5bd16b;box-shadow:0 0 0 4px rgba(91,209,107,.18)}
+.eyebrow .dot.off{background:#7d6f66;box-shadow:none}
+h1{font:400 clamp(54px,9.4vw,128px)/.86 var(--display);margin:22px 0 22px;letter-spacing:-.01em;text-wrap:balance}
+h1 .m{display:block;color:var(--cheddar);transform:rotate(-3deg);transform-origin:left;-webkit-text-stroke:0}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--muted);max-width:44ch;margin:0 0 30px}
+.lead strong{color:var(--cream);font-weight:700}
+.cta{display:flex;flex-wrap:wrap;gap:12px}
+.hint{margin-top:44px;font:500 12px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:flex;gap:10px;align-items:center}
+.hint svg{animation:bob 1.6s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(5px)}}
+
+/* ---------- anatomy (scroll-driven) ---------- */
+.anatomy{height:260vh;position:relative}
+.anatomy .sticky{position:sticky;top:0;height:100svh;display:flex;align-items:flex-end;padding-bottom:9vh}
+.anatomy h2{font:400 clamp(36px,5.4vw,72px)/.95 var(--display);margin:0 0 14px;max-width:11ch}
+.anatomy p{color:var(--muted);max-width:38ch;margin:0}
+.meter{margin-top:22px;width:220px;height:3px;background:var(--line);border-radius:3px;overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--cheddar)}
+
+/* ---------- solid sections ---------- */
+.solid{background:var(--char);position:relative}
+.solid::before{content:"";position:absolute;left:0;right:0;top:-140px;height:140px;background:linear-gradient(rgba(19,16,16,0),var(--char));pointer-events:none}
+section.block{padding-block:110px}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap;margin-bottom:46px}
+.sec-head h2{font:400 clamp(38px,5vw,64px)/.95 var(--display);margin:10px 0 0;text-wrap:balance}
+.sec-head p{color:var(--muted);max-width:40ch;margin:0}
+
+/* menu */
+.menu{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media (max-width:960px){.menu{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.menu{grid-template-columns:1fr}}
+.item{background:var(--char-2);border:1px solid var(--line);border-radius:22px;padding:22px;display:flex;flex-direction:column;gap:14px;
+  transition:transform .25s,border-color .25s;transform-style:preserve-3d;will-change:transform}
+.item:hover{border-color:rgba(244,165,49,.55)}
+.item canvas{width:100%;aspect-ratio:4/3;max-width:100%;border-radius:14px;background:radial-gradient(circle at 50% 60%,#2b211d,#171312)}
+.item .kind{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--cheddar)}
+.item h3{font:400 26px/1 var(--display);margin:0}
+.item p{margin:0;color:var(--muted);font-size:15px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.chips span{font-size:12px;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--cream)}
+.note{margin-top:26px;color:var(--muted);font-size:14px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);overflow:hidden;padding-block:22px;background:var(--cheddar);color:#1b120a}
+.marquee .track{display:flex;gap:48px;width:max-content;animation:slide 26s linear infinite;font:400 clamp(26px,3.4vw,44px)/1 var(--display);white-space:nowrap}
+.marquee .track span{display:flex;align-items:center;gap:48px}
+.marquee .track span::after{content:"✸";font-size:.7em}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* numbers */
+.facts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;border:1px solid var(--line);border-radius:22px;overflow:hidden}
+.facts div{padding:28px 24px;border-right:1px solid var(--line)}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font:400 clamp(34px,4vw,52px)/1 var(--display);color:var(--cheddar);font-variant-numeric:tabular-nums}
+.facts span{color:var(--muted);font-size:14px}
+@media (max-width:760px){.facts{grid-template-columns:repeat(2,minmax(0,1fr))}.facts div:nth-child(2){border-right:0}.facts div:nth-child(-n+2){border-bottom:1px solid var(--line)}}
+
+/* visit */
+.visit{display:grid;grid-template-columns:1.1fr .9fr;gap:22px}
+@media (max-width:860px){.visit{grid-template-columns:1fr}}
+.card{background:var(--char-2);border:1px solid var(--line);border-radius:22px;padding:30px;min-width:0}
+.card h3{font:400 28px/1 var(--display);margin:0 0 18px}
+dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:14px 22px}
+dt{font:500 11px/1.9 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--cheddar)}
+dd{margin:0;font-size:17px;min-width:0;overflow-wrap:anywhere}
+dd small{display:block;color:var(--muted);font-size:13px}
+.hours{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-top:6px}
+.hours div{border:1px solid var(--line);border-radius:10px;padding:8px 0;text-align:center;font:500 11px/1.3 var(--mono);color:var(--muted)}
+.hours div.today{border-color:var(--cheddar);color:var(--cream);background:rgba(244,165,49,.1)}
+.copyrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.copybtn{background:none;border:1px solid var(--line);color:var(--muted);border-radius:8px;padding:4px 10px;font:500 11px/1.4 var(--mono);cursor:pointer}
+.copybtn:hover{color:var(--cream);border-color:var(--cheddar)}
+.map{position:relative;min-height:320px;padding:0;overflow:hidden;display:flex;flex-direction:column}
+.map canvas{flex:1;width:100%;min-height:260px;display:block}
+.map .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;border-top:1px solid var(--line);flex-wrap:wrap}
+
+footer{padding-block:46px;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+.wa-float{position:fixed;z-index:30;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));
+  width:58px;height:58px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 10px 30px rgba(0,0,0,.4);transition:transform .2s}
+.wa-float:hover{transform:scale(1.08)}
+.wa-float svg{width:30px;height:30px}
+
+.reveal{transition:opacity .7s ease,transform .7s ease}
+.reveal.pre{opacity:.001;transform:translateY(26px)}
+
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal.pre{opacity:1;transform:none}
+}
+/* hero photo stack (3D) */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:center}
+.stack{position:relative;aspect-ratio:4/5;max-width:440px;width:100%;margin-left:auto;perspective:1400px}
+.stack .rig{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .2s ease-out}
+.stack figure{position:absolute;inset:0;margin:0;border-radius:26px;overflow:hidden;box-shadow:0 40px 80px -20px rgba(0,0,0,.8);border:1px solid rgba(245,237,226,.08);transform-style:preserve-3d}
+.stack img{width:100%;height:100%;object-fit:cover;display:block}
+.stack figure:nth-child(1){transform:translate3d(-26%,6%,-220px) rotateY(18deg) rotateZ(-6deg);filter:brightness(.6)}
+.stack figure:nth-child(2){transform:translate3d(24%,-4%,-140px) rotateY(-14deg) rotateZ(5deg);filter:brightness(.72)}
+.stack figure:nth-child(3){transform:translate3d(0,0,0)}
+.stack .stamp{position:absolute;left:-18px;bottom:28px;transform:translateZ(90px) rotate(-6deg);background:var(--cheddar);color:#1b120a;font:400 15px/1 var(--display);padding:12px 16px;border-radius:12px;box-shadow:0 14px 30px rgba(0,0,0,.45)}
+.stack .stamp small{display:block;font:500 10px/1.4 var(--mono);letter-spacing:.1em;margin-top:4px}
+/* 3D carousel */
+.carousel{position:relative;overflow:hidden;height:520px;perspective:1600px;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}
+.carousel:active{cursor:grabbing}
+.ring{position:absolute;left:50%;top:40px;width:260px;height:340px;margin-left:-130px;transform-style:preserve-3d}
+.ring figure{position:absolute;inset:0;margin:0;border-radius:20px;overflow:hidden;background:var(--char-2);border:1px solid var(--line);backface-visibility:hidden;box-shadow:0 30px 60px -20px rgba(0,0,0,.7)}
+.ring img{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.ring figcaption{position:absolute;left:0;right:0;bottom:0;padding:40px 16px 14px;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.8));font:400 18px/1.1 var(--display);color:#f5ede2}
+.ring figcaption small{display:block;font:500 10px/1.6 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--cheddar)}
+.floor{position:absolute;left:50%;bottom:30px;width:640px;max-width:100%;height:80px;transform:translateX(-50%);background:radial-gradient(closest-side,rgba(244,165,49,.22),transparent);filter:blur(6px)}
+.car-ctl{display:flex;justify-content:center;gap:12px;margin-top:6px}
+.car-ctl button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--char-2);color:var(--cream);cursor:pointer;font-size:18px}
+.car-ctl button:hover{border-color:var(--cheddar)}
+/* menu list */
+.menu-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 48px;margin-top:70px}
+.menu-list .row{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:20px 0;border-bottom:1px solid var(--line);min-width:0}
+.menu-list h3{margin:0;font:400 22px/1.1 var(--display)}
+.menu-list p{margin:0;grid-column:1/-1;color:var(--muted);font-size:15px}
+.menu-list .t{font:500 11px/1.9 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--cheddar);white-space:nowrap}
+.photo-card{padding:0;overflow:hidden;display:flex;flex-direction:column;min-height:320px}
+.photo-card img{flex:1;width:100%;min-height:240px;object-fit:cover;display:block}
+.photo-card .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 22px;border-top:1px solid var(--line);flex-wrap:wrap}
+@media (max-width:860px){.hero-grid{grid-template-columns:1fr}.stack{max-width:300px;margin:0 auto 10px;order:-1}.menu-list{grid-template-columns:1fr}}
+@media (max-width:760px){.hero{padding-top:90px}
+  .carousel{height:400px}.ring{width:190px;height:250px;margin-left:-95px}
+  .hero .hint{margin-top:24px}
+  .anatomy .sticky{padding-bottom:5vh}
+  .anatomy h2{font-size:34px}
+  .anatomy p{font-size:15px}}
+/* how to order */
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;counter-reset:st}
+.step{position:relative;padding:30px 26px 28px;border:1px solid var(--line);border-radius:22px;background:var(--char-2);min-width:0;overflow:hidden}
+.step b{display:block;font:400 72px/1 var(--display);color:transparent;-webkit-text-stroke:1.5px var(--cheddar);margin-bottom:18px}
+.step h3{margin:0 0 8px;font:400 24px/1.1 var(--display)}
+.step p{margin:0;color:var(--muted)}
+.step::after{content:"";position:absolute;right:-40px;top:-40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(closest-side,rgba(244,165,49,.18),transparent)}
+@media (max-width:860px){.steps{grid-template-columns:1fr}}
+/* lightbox */
+.lb{position:fixed;inset:0;z-index:60;background:rgba(10,8,8,.92);display:grid;place-items:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));animation:lbin .25s ease}
+.lb img{max-width:min(92vw,640px);max-height:78vh;border-radius:20px;box-shadow:0 40px 100px rgba(0,0,0,.7)}
+.lb p{margin:14px 0 0;text-align:center;font:400 22px/1.1 var(--display)}
+.lb button{position:absolute;top:calc(16px + env(safe-area-inset-top,0px));right:calc(16px + env(safe-area-inset-right,0px));width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:var(--char-2);color:var(--cream);font-size:20px;cursor:pointer}
+@keyframes lbin{from{opacity:0}}
+/* film grain */
+.grain{position:fixed;inset:-50%;z-index:50;pointer-events:none;opacity:.06;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");animation:grain 1s steps(4) infinite}
+@keyframes grain{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+/* scroll progress */
+.progress{position:fixed;left:0;top:0;height:3px;width:100%;z-index:25;background:var(--cheddar);transform-origin:0 50%;transform:scaleX(0)}
+/* depth tunnel: real photos flying toward the viewer */
+.depth{height:420vh;position:relative}
+.depth .sticky{position:sticky;top:0;height:100svh;overflow:hidden;perspective:900px;perspective-origin:50% 45%}
+.tunnel{position:absolute;inset:0;z-index:0;transform-style:preserve-3d}
+.depth .sticky::after{content:"";position:absolute;left:0;right:0;bottom:0;height:45%;z-index:1;background:linear-gradient(rgba(19,16,16,0),rgba(19,16,16,.85));pointer-events:none}
+.tunnel figure{position:absolute;left:50%;top:46%;width:min(34vw,340px);margin:0;border-radius:22px;overflow:hidden;border:1px solid rgba(245,237,226,.1);box-shadow:0 40px 90px -20px rgba(0,0,0,.85);will-change:transform,opacity;backface-visibility:hidden}
+.tunnel img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}
+.depth-copy{position:absolute;left:0;right:0;bottom:7vh;z-index:2;pointer-events:none}
+.depth-copy h2{font:400 clamp(36px,5.4vw,72px)/.95 var(--display);margin:14px 0 12px;text-shadow:0 6px 30px rgba(0,0,0,.6)}
+.depth-copy .cap{margin:0;font:500 13px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cheddar);min-height:1em}
+@media (max-width:760px){.tunnel figure{width:56vw}.depth-copy h2{font-size:34px}}
+/* full menu */
+.tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none;margin-bottom:14px}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;border:1px solid var(--line);background:transparent;color:var(--muted);font:700 14px/1 var(--body);padding:12px 18px;border-radius:999px;cursor:pointer;transition:.2s}
+.tabs button[aria-selected="true"]{background:var(--cheddar);border-color:var(--cheddar);color:#1b120a}
+.tabs button span{font:500 11px/1 var(--mono);opacity:.7;margin-left:6px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:26px}
+.filters:empty{margin-bottom:12px}
+.filters button{border:1px dashed var(--line);background:transparent;color:var(--muted);font:500 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:9px 12px;border-radius:8px;cursor:pointer}
+.filters button[aria-pressed="true"]{border-style:solid;border-color:var(--cheddar);color:var(--cream)}
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;perspective:1200px}
+@media (max-width:960px){.mgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:600px){.mgrid{grid-template-columns:1fr}}
+.mi{position:relative;background:var(--char-2);border:1px solid var(--line);border-radius:18px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:10px;min-width:0;transition:transform .25s,border-color .25s;animation:miin .45s both}
+.mi:hover{border-color:rgba(244,165,49,.55)}
+@keyframes miin{from{opacity:0;transform:translateY(14px) rotateX(-12deg)}}
+.mi .pic{margin:-20px -20px 4px;aspect-ratio:4/5;overflow:hidden;border-radius:17px 17px 0 0;background:#0e0b0a;position:relative}
+.mi .pic img{width:100%;height:100%;object-fit:cover;object-position:50% 35%;display:block;transition:transform .5s ease}
+.mi:hover .pic img{transform:scale(1.06)}
+.mi .pic.none{display:grid;place-items:center;background:repeating-linear-gradient(135deg,var(--char-2) 0 14px,#211a18 14px 28px)}
+.mi .pic.none span{font:500 11px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);border:1px dashed var(--line);padding:10px 12px;border-radius:8px;background:var(--char-2)}
+.mi .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.mi h3{margin:0;font:400 22px/1.05 var(--display);overflow-wrap:anywhere}
+.mi .badge{flex:none;font:500 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:6px 8px;border-radius:6px;background:rgba(244,165,49,.14);color:var(--cheddar)}
+.mi .badge.hot{background:var(--cheddar);color:#1b120a}
+.mi p{margin:0;color:var(--muted);font-size:14.5px;line-height:1.55}
+.mi .ing{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto;padding-top:6px}
+.mi .ing span{font-size:12px;padding:4px 9px;border-radius:999px;border:1px solid var(--line);color:var(--cream)}
+.mi .ask{font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px;margin-top:4px}
+.mi.simple{padding:16px 18px;flex-direction:row;align-items:center;justify-content:space-between;gap:12px}
+.mi.simple h3{font:700 16px/1.3 var(--body)}
+.mi.simple small{flex:none;color:var(--muted);font:500 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+.sub{grid-column:1/-1;font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--cheddar);margin:18px 0 2px}
+.sub:first-child{margin-top:0}
+.menu-cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+@media (prefers-reduced-motion:reduce){.mi{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="glow" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<div class="lb" id="lb" hidden><button type="button" id="lbClose" aria-label="Fechar">&#10005;</button><div><img id="lbImg" alt=""><p id="lbCap"></p></div></div>
+
+<header>
+  <div class="wrap nav">
+    <a class="brand" href="#topo" aria-label="Big Monster — início">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="19" fill="#f5ede2"/><path d="M8 19c0-6 5-10 12-10s12 4 12 10z" fill="#131010"/><circle cx="15" cy="15" r="2.6" fill="#f5ede2"/><circle cx="25" cy="15" r="2.6" fill="#f5ede2"/><circle cx="15.6" cy="15.4" r="1.2" fill="#131010"/><circle cx="25.6" cy="15.4" r="1.2" fill="#131010"/><rect x="8" y="21" width="24" height="3.4" rx="1.7" fill="#f4a531"/><path d="M8 26.4h24c0 3-2 4.6-4 4.6H12c-2 0-4-1.6-4-4.6z" fill="#131010"/></svg>
+      BIG MONSTER
+    </a>
+    <ul>
+      <li><a href="#anatomia">Os burgers</a></li>
+      <li><a href="#cardapio">Cardápio</a></li>
+      <li><a href="#pedir">Como pedir</a></li>
+      <li><a href="#visite">Visite</a></li>
+    </ul>
+    <a class="btn sm" href="https://wa.me/5589994041551" target="_blank" rel="noopener">Pedir agora</a>
+  </div>
+</header>
+
+<main id="topo">
+  <section class="hero">
+    <div class="wrap hero-grid" style="width:100%">
+      <div class="copy">
+        <div class="eyebrow"><span class="dot" id="statusDot"></span><span id="statusTxt">Valença do Piauí · PI</span></div>
+        <h1>Fome <span class="m">gigante?</span></h1>
+        <p class="lead">Hambúrguer artesanal feito na hora, com <strong>carne prensada na chapa, cheddar duplo e bacon crocante</strong>. Quando a fome é gigante, a escolha é óbvia.</p>
+        <div class="cta">
+          <a class="btn" href="https://wa.me/5589994041551" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.6 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg>
+            Peça pelo WhatsApp
+          </a>
+          <a class="btn ghost" href="#cardapio">Ver o cardápio</a>
+        </div>
+        <div class="hint"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 4v16m0 0-6-6m6 6 6-6"/></svg>Role para ver de perto</div>
+      </div>
+      <div class="stack" id="stack" aria-label="Fotos dos hambúrgueres da Big Monster">
+        <div class="rig" id="rig">
+          <figure><img src="img/cebola2.webp" alt="Hambúrguer com cebola caramelizada e cheddar"></figure>
+          <figure><img src="img/ladrilho.webp" alt="Hambúrguer duplo com cheddar derretido no salão"></figure>
+          <figure><img src="img/bacon.webp" alt="Hambúrguer de duas carnes com cheddar e bacon no prato azul"></figure>
+          <div class="stamp">Feito na hora<small>2x smash · cheddar · bacon</small></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="depth" id="anatomia" aria-label="Fotos dos burgers em profundidade">
+    <div class="sticky">
+      <div class="tunnel" id="tunnel">
+          <figure data-cap="Duas carnes smash"><img src="img/bacon.webp" alt="Duas carnes smash"></figure>
+          <figure data-cap="Cebola caramelizada"><img src="img/cebola2.webp" alt="Cebola caramelizada"></figure>
+          <figure data-cap="Nevada"><img src="img/nevada.webp" alt="Nevada"></figure>
+          <figure data-cap="Pedido para a mesa"><img src="img/trio.webp" alt="Pedido para a mesa"></figure>
+          <figure data-cap="Com bacon e salada"><img src="img/palito.webp" alt="Com bacon e salada"></figure>
+          <figure data-cap="Tamanho monstro"><img src="img/triplo.webp" alt="Tamanho monstro"></figure>
+          <figure data-cap="Cheddar derretido"><img src="img/verde.webp" alt="Cheddar derretido"></figure>
+          <figure data-cap="Com fritas e refri"><img src="img/combo.webp" alt="Com fritas e refri"></figure>
+      </div>
+      <div class="depth-copy wrap">
+        <div class="eyebrow">Direto da cozinha da Big Monster</div>
+        <h2>Tamanho monstro.<br>Sabor absurdo.</h2>
+        <p class="cap" id="depthCap">Duas carnes smash</p>
+        <div class="meter" aria-hidden="true"><i id="meter"></i></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="solid">
+    <div class="marquee" aria-hidden="true">
+      <div class="track">
+        <span>Smash burger</span><span>Cheddar duplo</span><span>Bacon crocante</span><span>Hot dog Missisipi</span><span>Milk shake</span><span>Mini burgers</span>
+        <span>Smash burger</span><span>Cheddar duplo</span><span>Bacon crocante</span><span>Hot dog Missisipi</span><span>Milk shake</span><span>Mini burgers</span>
+      </div>
+    </div>
+
+    <section class="block" id="fotos">
+      <div class="wrap">
+        <div class="sec-head">
+          <div>
+            <div class="eyebrow">Direto da chapa</div>
+            <h2>Fotos reais da casa</h2>
+          </div>
+          <p>Arraste para girar a vitrine e toque numa foto para ampliar. Todas as fotos são do Instagram da Big Monster.</p>
+        </div>
+        <div class="carousel" id="carousel" aria-roledescription="carrossel">
+          <div class="floor" aria-hidden="true"></div>
+          <div class="ring" id="ring">
+            <figure><img src="img/bacon.webp" alt="Duas carnes com cheddar e bacon"><figcaption><small>Carro-chefe</small>Cheddar e bacon</figcaption></figure>
+            <figure><img src="img/nevada.webp" alt="Hambúrguer Nevada no prato amarelo"><figcaption><small>Linha dos Estados</small>Nevada</figcaption></figure>
+            <figure><img src="img/cheddar.webp" alt="Hambúrguer duplo com cheddar em frente ao letreiro Big Monster"><figcaption><small>No salão</small>Cheddar duplo</figcaption></figure>
+            <figure><img src="img/cebola2.webp" alt="Hambúrguer com cebola caramelizada"><figcaption><small>Cebola na chapa</small>Cebola caramelizada</figcaption></figure>
+            <figure><img src="img/trio.webp" alt="Três hambúrgueres com salada na bandeja"><figcaption><small>Para a mesa</small>Rodada de burgers</figcaption></figure>
+            <figure><img src="img/triplo.webp" alt="Dois hambúrgueres de três carnes com bacon"><figcaption><small>Tamanho monstro</small>Triplo com bacon</figcaption></figure>
+            <figure><img src="img/smash.webp" alt="Smash burger com cheddar, fritas e molho"><figcaption><small>Clássico</small>Smash com fritas</figcaption></figure>
+            <figure><img src="img/verde.webp" alt="Hambúrguer com cheddar e folhas verdes"><figcaption><small>Com folhas</small>Cheddar e salada</figcaption></figure>
+            <figure><img src="img/combo.webp" alt="Dois hambúrgueres, batata frita e refrigerante"><figcaption><small>Combo</small>Com fritas e refri</figcaption></figure>
+            <figure><img src="img/salao.webp" alt="Hambúrguer na mão em frente ao letreiro Monster no salão"><figcaption><small>Valença do Piauí</small>No salão</figcaption></figure>
+          </div>
+        </div>
+        <div class="car-ctl">
+          <button type="button" id="prev" aria-label="Foto anterior">&#8592;</button>
+          <button type="button" id="next" aria-label="Próxima foto">&#8594;</button>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="block" id="cardapio" style="padding-top:20px">
+      <div class="wrap">
+        <div class="sec-head">
+          <div>
+            <div class="eyebrow">Cardápio Big Monster</div>
+            <h2>O cardápio completo</h2>
+          </div>
+          <p>Os itens do cardápio oficial, com fotos reais de cada lanche tiradas na casa. Os preços entram em breve; por enquanto, consulte na hora do pedido.</p>
+        </div>
+        <div class="tabs" role="tablist" id="tabs" aria-label="Categorias do cardápio"></div>
+        <div class="filters" id="filters" aria-label="Filtrar lanches"></div>
+        <div class="mgrid" id="mgrid" aria-live="polite"></div>
+        <div class="menu-cta">
+          <a class="btn" href="https://bigmonstervalenca.menudino.com" target="_blank" rel="noopener">Fazer pedido pelo cardápio online</a>
+          <a class="btn ghost" href="https://wa.me/5589994041551" target="_blank" rel="noopener">Pedir pelo WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" style="padding-top:0" id="pedir">
+      <div class="wrap">
+        <div class="sec-head">
+          <div>
+            <div class="eyebrow">Como pedir</div>
+            <h2>Do WhatsApp para a sua mesa</h2>
+          </div>
+          <p>Delivery em Valença ou retirada no salão, todos os dias a partir das 17:30.</p>
+        </div>
+        <div class="steps">
+          <div class="step reveal"><b>1</b><h3>Chame no WhatsApp</h3><p>(89) 99404-1551, ou faça o pedido direto pelo cardápio online da casa.</p></div>
+          <div class="step reveal"><b>2</b><h3>Escolha o seu monstro</h3><p>São 21 lanches, do Dakota do Sul ao Raiva. Junte batata, onion rings e milk shake.</p></div>
+          <div class="step reveal"><b>3</b><h3>Receba ou retire</h3><p>Entrega em casa ou retirada na Rua São João, 471, no Centro.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" style="padding-top:0">
+      <div class="wrap">
+        <div class="facts">
+          <div><b data-count="4">0</b><span>anos em Valença, desde dez/2021</span></div>
+          <div><b>7/7</b><span>aberto todos os dias da semana</span></div>
+          <div><b data-count="3.4" data-dec="1" data-suf=" mil">0</b><span>seguidores no Instagram</span></div>
+          <div><b>7h</b><span>de cozinha aberta por noite</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="block" id="visite" style="padding-top:20px">
+      <div class="wrap">
+        <div class="sec-head">
+          <div>
+            <div class="eyebrow">Visite ou peça em casa</div>
+            <h2>No Centro de Valença</h2>
+          </div>
+          <p>Coma no salão ou peça delivery pelo WhatsApp.</p>
+        </div>
+        <div class="visit">
+          <div class="card">
+            <h3>Informações</h3>
+            <dl>
+              <dt>Endereço</dt>
+              <dd>Rua São João, 471 — Centro<small>Valença do Piauí · PI · 64300-000</small></dd>
+              <dt>Horário</dt>
+              <dd>Todos os dias, 17:30 às 00:30
+                <div class="hours" id="hours"></div>
+              </dd>
+              <dt>WhatsApp</dt>
+              <dd><div class="copyrow"><a href="https://wa.me/5589994041551" target="_blank" rel="noopener">(89) 99404-1551</a><button class="copybtn" type="button" data-copy="(89) 99404-1551">copiar</button></div></dd>
+              <dt>Instagram</dt>
+              <dd><a href="https://www.instagram.com/bigmonstervalenca/" target="_blank" rel="noopener">@bigmonstervalenca</a></dd>
+              <dt>Serviço</dt>
+              <dd>Salão e delivery</dd>
+            </dl>
+          </div>
+          <div class="card photo-card">
+            <img src="img/cheddar.webp" alt="Salão da Big Monster com o letreiro na parede" style="object-position:50% 20%">
+            <div class="bar">
+              <span style="color:var(--muted);font-size:14px">R. São João, 471 · Centro</span>
+              <a class="btn sm" href="https://www.google.com/maps/search/?api=1&query=Big+Monster+Hamburgueria+Rua+S%C3%A3o+Jo%C3%A3o+471+Valen%C3%A7a+do+Piau%C3%AD" target="_blank" rel="noopener">Abrir no Google Maps</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="wrap">
+        <span>Big Monster · Hamburgueria Artesanal · Valença do Piauí, PI</span>
+        <span>Quando a fome é gigante, a escolha é óbvia.</span>
+      </div>
+    </footer>
+  </div>
+</main>
+
+<a class="wa-float" href="https://wa.me/5589994041551" target="_blank" rel="noopener" aria-label="Pedir pelo WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.6 14.1c-.2.7-1.4 1.3-2 1.4-.5.1-1.2.1-1.9-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5.1-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l.9-1.1c.2-.3.4-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg>
+</a>
+
+<script>
+(function(){
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const C = {
+  bun:0xd9822e, bunTop:0x9a4612, bunIn:0xf2d29a, patty:0x4a2a1a, pattyCrust:0x1c0f08,
+  cheese:0xee8a00, bacon:0x6e2414, baconFat:0xd4936a, sauce:0xc9cf86, lettuce:0x7fbf3f, tomato:0xd8392b,
+  seed:0xf7ead0, onion:0xeedff0
+};
+
+/* ================= DEPTH TUNNEL ================= */
+(function(){
+  const sec=document.getElementById('anatomia'), figs=[...document.querySelectorAll('#tunnel figure')], cap=document.getElementById('depthCap'), meter=document.getElementById('meter');
+  const n=figs.length, gap=900, spots=[[-1.05,-.15],[1.0,.05],[-.9,.2],[1.05,-.2],[-1.0,0],[.95,.18],[-.95,-.2],[1.0,.1]];
+  let last='';
+  function f(){
+    const r=sec.getBoundingClientRect(), H=innerHeight, W=innerWidth;
+    const p=Math.min(1,Math.max(0,-r.top/(r.height-H)));
+    meter.style.width=(p*100).toFixed(1)+'%';
+    const travel=p*(n*gap+600)-400, mob=W<760; let best=null,bd=1e9;
+    figs.forEach((el,i)=>{
+      const z=travel-i*gap;                       // > 0 means passing the camera
+      const sp=spots[i%spots.length], sx=(mob?.32:.62)*W/2*sp[0]*(1+Math.max(0,z)/500), sy=H*.18*sp[1];
+      const o= z<-3600?0 : z<-2800?(z+3600)/800 : z>350?Math.max(0,1-(z-350)/300):1;
+      el.style.transform='translate(-50%,-50%) translate3d('+sx.toFixed(1)+'px,'+sy.toFixed(1)+'px,'+z.toFixed(1)+'px) rotateY('+(-sp[0]*12).toFixed(1)+'deg)';
+      el.style.opacity=o.toFixed(3); el.style.zIndex=Math.round(z+5000);
+      const d=Math.abs(z+250); if(o>.5&&d<bd){bd=d;best=el;}
+    });
+    if(best&&best.dataset.cap!==last){last=best.dataset.cap;cap.textContent=last;}
+  }
+  addEventListener('scroll',f,{passive:true}); addEventListener('resize',f); f();
+})();
+
+/* ================= HERO PHOTO STACK (3D tilt) ================= */
+(function(){
+  const stack=document.getElementById('stack'), rig=document.getElementById('rig'); if(!stack||reduce)return;
+  let rx=0,ry=0,tx=0,ty=0;
+  addEventListener('pointermove',e=>{const r=stack.getBoundingClientRect();tx=((e.clientX-(r.left+r.width/2))/innerWidth)*30;ty=-((e.clientY-(r.top+r.height/2))/innerHeight)*20;});
+  (function loop(t){rx+=(ty-rx)*.08;ry+=(tx-ry)*.08;const f=Math.sin(t/1400)*6;
+    rig.style.transform='rotateX('+(rx+4).toFixed(2)+'deg) rotateY('+(ry-8).toFixed(2)+'deg) translateY('+f.toFixed(1)+'px) translateZ(0) translateY('+(-scrollY*0.15).toFixed(0)+'px)';requestAnimationFrame(loop);})(0);
+})();
+
+/* ================= 3D CAROUSEL ================= */
+(function(){
+  const car=document.getElementById('carousel'), ring=document.getElementById('ring'); if(!car)return;
+  const items=[...ring.children], n=items.length, step=360/n;
+  let R=0, angle=0, vel=reduce?0:-0.08, target=null, drag=false, lastX=0, idle=0;
+  function layout(){const w=ring.offsetWidth;R=Math.round((w/2)/Math.tan(Math.PI/n))+34;items.forEach((f,i)=>f.style.transform='rotateY('+(i*step)+'deg) translateZ('+R+'px)');}
+  layout(); addEventListener('resize',layout);
+  let downX=0,downT=null;
+  car.addEventListener('pointerdown',e=>{drag=true;lastX=downX=e.clientX;downT=e.target.closest('figure');target=null;car.setPointerCapture(e.pointerId);});
+  car.addEventListener('pointerup',e=>{if(Math.abs(e.clientX-downX)<6){const f=document.elementFromPoint(e.clientX,e.clientY);const fig=f&&f.closest('#ring figure');if(fig)openLB(fig);}});
+  const lb=document.getElementById('lb');
+  function openLB(fig){document.getElementById('lbImg').src=fig.querySelector('img').src;document.getElementById('lbImg').alt=fig.querySelector('img').alt;document.getElementById('lbCap').textContent=fig.querySelector('figcaption').lastChild.textContent;lb.hidden=false;document.getElementById('lbClose').focus();}
+  const closeLB=()=>{lb.hidden=true;};
+  document.getElementById('lbClose').onclick=closeLB; lb.addEventListener('click',e=>{if(e.target===lb)closeLB();}); addEventListener('keydown',e=>{if(e.key==='Escape')closeLB();});
+  car.addEventListener('pointermove',e=>{if(!drag)return;const dx=e.clientX-lastX;lastX=e.clientX;angle+=dx*0.3;vel=dx*0.3;});
+  car.addEventListener('pointerup',()=>{drag=false;idle=0;});
+  car.addEventListener('pointercancel',()=>{drag=false;});
+  const snap=d=>{target=Math.round((angle+d*step)/step)*step;vel=0;idle=0;};
+  document.getElementById('prev').onclick=()=>snap(1);
+  document.getElementById('next').onclick=()=>snap(-1);
+  (function loop(){
+    if(!drag){
+      if(target!==null){angle+=(target-angle)*.1;if(Math.abs(target-angle)<.05){angle=target;target=null;}idle++;}
+      else{vel*=0.95;if(!reduce&&Math.abs(vel)<0.08)vel=vel<0?-0.08:0.08;angle+=vel;}
+    }
+    ring.style.transform='translateZ('+(-R)+'px) rotateX(-6deg) rotateY('+angle+'deg)';
+    items.forEach((f,i)=>{let a=((i*step+angle)%360+360)%360;if(a>180)a-=360;const k=1-Math.min(1,Math.abs(a)/150);f.style.filter='brightness('+(0.35+0.65*k).toFixed(2)+')';});
+    requestAnimationFrame(loop);
+  })();
+})();
+
+/* scroll progress */
+(function(){const pr=document.getElementById('progress');const f=()=>{const m=document.documentElement.scrollHeight-innerHeight;pr.style.transform='scaleX('+(m>0?scrollY/m:0)+')';};addEventListener('scroll',f,{passive:true});f();})();
+
+/* ================= FULL MENU (official items, no prices yet) ================= */
+(function(){
+const L=(n,d,tags,badge)=>({n,d,tags,badge});
+const MENU={
+ 'Lanches':[
+  L('Dakota do Sul','Pão selado na manteiga, smash 80g, queijo cheddar fatiado, bacon e maionese verde.',['smash'],''),
+  L('Dakota do Norte','Pão selado na manteiga, 2x smash 80g, 2x cheddar fatiado, bacon e maionese verde.',['smash'],'2x smash'),
+  L('Velho Oeste','Pão selado na manteiga, 3x smash 80g, 3x cheddar fatiado, bacon e maionese verde.',['smash','monstro'],'3x smash'),
+  L('Arizona','Pão selado na manteiga, blend 150g, maionese temperada, cheddar fatiado e cebola caramelizada.',['blend'],''),
+  L('Colorado','Pão selado na manteiga, blend 150g, barbecue, queijo cheddar fatiado e molho joker.',['blend'],''),
+  L('Nevada','Pão selado na manteiga, blend 150g, maionese verde, queijo mussarela fatiado, farofa de bacon, cebola roxa e geleia de manga.',['blend'],''),
+  L('Texas','Pão selado na manteiga, blend 150g, maionese verde, queijo cheddar fatiado, picles, tomate e alface.',['blend'],''),
+  L('Minessota','Pão selado na manteiga, blend de frango 100g, maionese verde, queijo coalho fatiado, tomate e alface.',['frango'],'frango'),
+  L('Flórida','Pão selado na manteiga, blend 150g, maionese verde, queijo cheddar fatiado, picles, bacon e ovo.',['blend'],''),
+  L('Oregon','Pão selado na manteiga, blend 150g, maionese verde, queijo cheddar fatiado, picles, bacon, barbecue e onion rings.',['blend'],''),
+  L('Filadelfia','Pão selado na manteiga, blend 150g, cheddar fatiado, barbecue, bacon fatiado e cream cheese.',['blend'],''),
+  L('Nova Iorque','Pão selado na manteiga, blend 150g, maionese verde e queijo mussarela fatiado, mergulhado numa piscininha de cheddar e bacon.',['blend'],''),
+  L('Washington','Pão selado na manteiga, blend 150g, mussarela, maionese temperada, bacon fatiado e chimichurri.',['blend'],''),
+  L('Califórnia','Pão selado na manteiga, blend 150g, maionese verde, queijo cheddar fatiado, disco de catupiry original empanado, bacon e alface.',['blend'],'catupiry'),
+  L('Havai','Pão selado na manteiga, blend 150g, maionese verde, queijo cheddar fatiado, disco de mussarela, bacon e alface.',['blend'],''),
+  L('Alegria','Pão brioche, blend 150g, catupiry, farofa de bacon, 2x onion rings e maionese temperada.',['blend','especial'],'especial'),
+  L('Ansiedade','Pão brioche, blend 150g, cheddar fatiado, cebola caramelizada, bacon fatiado, cream cheese e molho barbecue.',['blend','especial'],'especial'),
+  L('Raiva','Pão brioche, 2x blend 150g, 2x cheddar fatiado, cebola caramelizada, bacon fatiado e maionese temperada.',['blend','especial','monstro'],'2x 150g'),
+  L('Mississipi','Pão brioche estilo hot dog, purê de batatas, milho, ervilha, maionese temperada, salsicha, molho de tomate, batata palha e mostarda.',['hotdog'],'hot dog'),
+  L('Big Kids','Pão selado na manteiga, blend 80g e queijo cheddar fatiado, com 100g de batata frita e 1 suco ou refrigerante lata.',['kids'],'infantil'),
+  L('Combo Refri + Batata','Refrigerante 350ml e 150g de batata frita para acompanhar o lanche.',['combo'],'combo')
+ ],
+ 'Porções':[
+  L('Batata 200g simples','Batata frita sequinha.',[],''),L('Batata 200g recheada','Batata frita recheada com cheddar e bacon.',[],''),
+  L('Batata 500g simples','Porção grande para dividir.',[],''),L('Batata 500g recheada','Batata frita recheada com cheddar e bacon.',[],''),
+  L('Onion rings 300g','Anéis de cebola empanados.',[],'')
+ ],
+ 'Molhos':['Maionese verde','Barbecue','Chimichurri','Geleia de manga','Geleia de pimenta','Molho cheddar'],
+ 'Doces':{'Milk shake':['Milk shake com Nutella','Milk shake sem Nutella'],'Sorvete':['Bola de sorvete'],'Bala':['Mentos']},
+ 'Bebidas':{
+  'Sucos':['Cajuína 500ml','Suco de abacaxi','Suco de abacaxi com hortelã','Suco de acerola','Suco de cajá','Suco de caju','Suco de goiaba','Suco de maracujá','Suco Del Valle','Kapo morango','Kapo uva'],
+  'Refrigerantes':['Lata 350ml: Coca-Cola, Coca Zero, Fanta Laranja, Fanta Uva, Kuat, Schweppes, Sprite','Coca-Cola 250ml','Kuat 290ml','Coca-Cola 1L pet','Coca-Cola 1L retornável','Coca Zero 1L retornável','Guaraná Antarctica 1L','Coca-Cola 1,5L','Kuat 1,5L','Coca-Cola 2L'],
+  'Água e energético':['Água mineral sem gás','Água mineral com gás','Água 1,5L','Energético Monster'],
+  'Alcoólicos':['Heineken long neck','Império long neck','Caipirinha','Las Vegas']
+ }
+};
+const FILTERS=[['todos','Todos'],['smash','Smash'],['blend','Blend 150g'],['especial','Especiais'],['monstro','Tamanho monstro'],['frango','Frango'],['hotdog','Hot dog'],['kids','Infantil']];
+const ING=['bacon','cheddar','catupiry','cebola caramelizada','geleia de manga','onion rings','cream cheese','barbecue','picles','ovo','chimichurri','mussarela','queijo coalho','farofa de bacon','maionese verde','batata palha'];
+const PH={'Alegria':'alegria','Ansiedade':'ansiedade','Arizona':'arizona','Big Kids':'bigkids','Califórnia':'california','Dakota do Norte':'dakotanorte','Dakota do Sul':'dakotasul','Filadelfia':'filadelfia','Flórida':'florida','Minessota':'minessota','Mississipi':'mississipi','Nevada':'nevada','Oregon':'oregon','Raiva':'raiva','Texas':'texas','Velho Oeste':'velhooeste'};
+const IMG={alegria:'img/menu/alegria.webp',ansiedade:'img/menu/ansiedade.webp',arizona:'img/menu/arizona.webp',bigkids:'img/menu/bigkids.webp',california:'img/menu/california.webp',dakotanorte:'img/menu/dakotanorte.webp',dakotasul:'img/menu/dakotasul.webp',filadelfia:'img/menu/filadelfia.webp',florida:'img/menu/florida.webp',minessota:'img/menu/minessota.webp',mississipi:'img/menu/mississipi.webp',nevada:'img/menu/nevada.webp',oregon:'img/menu/oregon.webp',raiva:'img/menu/raiva.webp',texas:'img/menu/texas.webp',velhooeste:'img/menu/velhooeste.webp'};
+const count=k=>{const v=MENU[k];return Array.isArray(v)?v.length:Object.values(v).reduce((a,b)=>a+b.length,0);};
+const tabs=document.getElementById('tabs'), grid=document.getElementById('mgrid'), fil=document.getElementById('filters');
+let cat='Lanches', f='todos';
+Object.keys(MENU).forEach(k=>{const b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.dataset.k=k;b.innerHTML=k+'<span>'+count(k)+'</span>';b.onclick=()=>{cat=k;f='todos';render();};tabs.appendChild(b);});
+const esc=t=>t.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function card(it,i){
+  const d=it.d.toLowerCase();let ings=ING.filter(w=>d.includes(w));if(ings.includes('farofa de bacon')&&d.split('bacon').length===2)ings=ings.filter(w=>w!=='bacon');if(ings.includes('cheddar')&&d.includes('piscininha'))ings=ings;ings=ings.slice(0,4);
+  const ph=PH[it.n]&&IMG[PH[it.n]], isL=cat==='Lanches';
+  const pic= !isL?'' : ph ? '<div class="pic"><img src="'+ph+'" alt="Foto real do '+esc(it.n)+' na Big Monster"></div>' : '<div class="pic none"><span>Foto real em breve</span></div>';
+  return '<article class="mi" style="animation-delay:'+(i*0.03)+'s">'+pic+'<div class="top"><h3>'+esc(it.n)+'</h3>'+(it.badge?'<span class="badge'+(it.tags.includes('monstro')?' hot':'')+'">'+esc(it.badge)+'</span>':'')+'</div><p>'+esc(it.d)+'</p>'+(ings.length?'<div class="ing">'+ings.map(w=>'<span>'+w+'</span>').join('')+'</div>':'')+'<div class="ask">Preço em breve</div></article>';
+}
+const simple=(n,i)=>'<div class="mi simple" style="animation-delay:'+(i*0.02)+'s"><h3>'+esc(n)+'</h3><small>em breve</small></div>';
+function render(){
+  [...tabs.children].forEach(b=>b.setAttribute('aria-selected',b.dataset.k===cat?'true':'false'));
+  fil.innerHTML = cat==='Lanches' ? FILTERS.map(([k,l])=>'<button type="button" data-f="'+k+'" aria-pressed="'+(f===k)+'">'+l+'</button>').join('') : '';
+  fil.querySelectorAll('button').forEach(b=>b.onclick=()=>{f=b.dataset.f;render();});
+  const v=MENU[cat];
+  if(Array.isArray(v)&&typeof v[0]==='object'){grid.innerHTML=v.filter(it=>f==='todos'||it.tags.includes(f)).map(card).join('');}
+  else if(Array.isArray(v)){grid.innerHTML=v.map(simple).join('');}
+  else{let i=0;grid.innerHTML=Object.entries(v).map(([g,items])=>'<div class="sub">'+g+'</div>'+items.map(n=>simple(n,i++)).join('')).join('');}
+  if(!reduce)grid.querySelectorAll('.mi:not(.simple)').forEach(c=>{c.onpointermove=e=>{const r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;c.style.transform='rotateY('+(x*10).toFixed(1)+'deg) rotateX('+(-y*10).toFixed(1)+'deg) translateZ(10px)';};c.onpointerleave=()=>c.style.transform='';});
+}
+render();
+})();
+
+/* ================= open / closed + hours ================= */
+(function(){
+  const now=new Date(); const h=now.getHours()+now.getMinutes()/60; const open= h>=17.5 || h<0.5;
+  document.getElementById('statusDot').classList.toggle('off',!open);
+  document.getElementById('statusTxt').textContent=(open?'Aberto agora':'Abre hoje às 17:30')+' · Valença do Piauí';
+  const days=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb']; const el=document.getElementById('hours');
+  days.forEach((d,i)=>{const n=document.createElement('div');n.textContent=d;if(i===now.getDay())n.className='today';el.appendChild(n);});
+})();
+
+/* copy */
+document.querySelectorAll('.copybtn').forEach(b=>b.addEventListener('click',()=>{
+  const txt=b.dataset.copy; const done=()=>{b.textContent='copiado';setTimeout(()=>b.textContent='copiar',1600);};
+  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done).catch(()=>{});}
+}));
+
+/* reveal + counters (content visible at rest; only animate below the fold) */
+const io2=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('pre');io2.unobserve(e.target);}}),{threshold:.15});
+document.querySelectorAll('.reveal').forEach((el,i)=>{ if(reduce)return; if(el.getBoundingClientRect().top>innerHeight){el.classList.add('pre');el.style.transitionDelay=(i%3*0.08)+'s';io2.observe(el);} });
+const io3=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;io3.unobserve(e.target);const el=e.target,to=+el.dataset.count,dec=+(el.dataset.dec||0),suf=el.dataset.suf||'';
+  const t0=performance.now();(function step(n){const p=Math.min(1,(n-t0)/1200);const v=to*(1-Math.pow(1-p,3));el.textContent=v.toFixed(dec).replace('.',',')+suf;if(p<1)requestAnimationFrame(step);})(t0);}),{threshold:.5});
+document.querySelectorAll('[data-count]').forEach(el=>{ if(reduce){el.textContent=(+el.dataset.count).toFixed(+(el.dataset.dec||0)).replace('.',',')+(el.dataset.suf||'');} else io3.observe(el); });
+})();
+</script>
+</body>
+</html>
